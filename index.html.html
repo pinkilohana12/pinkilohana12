@@ -1,0 +1,2524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube - Watch, Share & Discover Videos</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f9f9f9;
+            --tertiary-bg: #f1f1f1;
+            --hover-bg: #e5e5e5;
+
+            --text-primary: #0f0f0f;
+            --text-secondary: #606060;
+
+            --accent: #ff0000;
+            --accent-hover: #cc0000;
+
+            --border-color: #dddddd;
+
+            --navbar-height: 56px;
+            --sidebar-width: 240px;
+        }
+
+        html,
+        body {
+            height: 100%;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ==================== NAVBAR ==================== */
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--navbar-height);
+            background: rgba(138, 130, 130, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1100;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 0 0 auto;
+        }
+
+        .menu-toggle {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 22px;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            color: var(--accent);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent) 0%, #ff6b6b 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        /* Search Bar */
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 24px;
+        }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .search-wrapper:focus-within {
+            border-color: var(--accent);
+            background: var(--tertiary-bg);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+        }
+
+        .search-box {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 10px 16px;
+            color: var(--text-primary);
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-box::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .search-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s ease;
+        }
+
+        .search-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* Navbar Right */
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 0 0 auto;
+        }
+
+        .nav-icon-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-icon-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            object-fit: cover;
+        }
+
+        .user-avatar:hover {
+            border-color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        /* User Dropdown */
+        .user-menu {
+            position: absolute;
+            top: 56px;
+            right: 16px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            min-width: 240px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 1050;
+            display: none;
+            overflow: hidden;
+        }
+
+        .user-menu.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-menu-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--tertiary-bg);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-details h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            margin: 2px 0 0 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .user-menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .user-menu-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .user-menu-item i {
+            width: 20px;
+        }
+
+        .user-menu-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 8px 0;
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .sidebar {
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--navbar-height));
+            background: var(--secondary-bg);
+            border-right: 1px solid var(--border-color);
+            z-index: 1000;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            padding: 8px 0;
+        }
+
+        .sidebar.hide {
+            transform: translateX(-100%);
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--hover-bg);
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 0 20px 20px 0;
+            margin: 2px 8px;
+            border: none;
+            background: none;
+            width: calc(100% - 16px);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .sidebar-item i {
+            font-size: 20px;
+            width: 28px;
+        }
+
+        .sidebar-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-item.active {
+            background: var(--hover-bg);
+            color: var(--accent);
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 8px 0;
+        }
+
+        .sidebar-section-title {
+            padding: 12px 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--navbar-height);
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content {
+            padding: 24px;
+            min-height: calc(100vh - var(--navbar-height));
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ==================== HERO SECTION ==================== */
+        .hero-section {
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bubble-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px;
+            margin-bottom: 30px;
+
+        }
+
+        .bubble {
+            padding: 9px 18px;
+            border-radius: 20px;
+            background-color: #c9bcbc;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.3s;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .bubble:hover {
+            background-color: #616569;
+        }
+
+        .bubble.active {
+            background-color: black;
+            color: white;
+        }
+
+        /* ==================== VIDEO GRID ==================== */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @media (max-width: 1400px) {
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ==================== VIDEO CARD ==================== */
+        .video-card {
+            background: var(--secondary-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: var(--accent);
+        }
+
+        .video-thumbnail-wrapper {
+            position: relative;
+            height: 180px;
+            background: var(--tertiary-bg);
+            overflow: hidden;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover .video-thumbnail {
+            transform: scale(1.05);
+        }
+
+        .video-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-card:hover .video-overlay {
+            opacity: 1;
+        }
+
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 0, 0, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .video-card:hover .play-btn {
+            transform: scale(1.1);
+            background: var(--accent);
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .video-info {
+            padding: 16px;
+        }
+
+        .video-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+            display: -webkit-box;
+            /* -webkit-line-clamp: 2; */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            color: var(--text-primary);
+        }
+
+        .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .channel-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .channel-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .channel-name {
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .channel-name-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .verified-badge {
+            color: var(--accent);
+            font-size: 12px;
+        }
+
+        .video-meta {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-card:hover .video-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover,
+        .action-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        /* ==================== MODALS ==================== */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-custom {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2050;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-custom.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-custom-content {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* ==================== VIDEO PLAYER MODAL ==================== */
+        .video-player-modal {
+            position: fixed;
+            inset: 0;
+            background: var(--primary-bg);
+            z-index: 2050;
+            display: none;
+            overflow-y: auto;
+            flex-direction: column;
+        }
+
+        .video-player-modal.show {
+            display: flex;
+        }
+
+        .video-player-header {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .video-player-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .video-player-close:hover {
+            color: var(--text-primary);
+        }
+
+        .video-player-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            position: relative;
+        }
+
+        .video-player-iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-player-info {
+            max-width: 100%;
+            padding: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* ==================== FORMS & BUTTONS ==================== */
+        .form-control-custom {
+            background: var(--tertiary-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .form-control-custom:focus {
+            background: var(--tertiary-bg);
+            border-color: var(--accent);
+            color: var(--text-primary);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+            outline: none;
+        }
+
+        .form-control-custom::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .btn-primary-custom {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 28px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary-custom:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(255, 0, 0, 0.3);
+            color: white;
+        }
+
+        .btn-secondary-custom {
+            background: var(--tertiary-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 12px 28px;
+            border-radius: 28px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-secondary-custom:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+
+        /* ==================== TOAST NOTIFICATION ==================== */
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            padding: 16px 24px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            z-index: 3000;
+            animation: toastSlideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 400px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 100%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .toast-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* ==================== LOADING STATE ==================== */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-custom {
+                padding: 0 12px;
+            }
+
+            .search-container {
+                display: none;
+            }
+
+            .logo-text {
+                display: none;
+            }
+
+            .hero-section {
+                padding: 24px;
+            }
+
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-left {
+                gap: 12px;
+            }
+
+            .nav-icon-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+
+            .video-title {
+                font-size: 14px;
+            }
+
+            .channel-name {
+                font-size: 12px;
+            }
+
+            .video-meta {
+                font-size: 12px;
+            }
+
+            .hero-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--hover-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ==================== NAVBAR ==================== -->
+    <div class="navbar-custom">
+        <div class="navbar-left">
+            <button class="menu-toggle" id="menuToggle" title="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fab fa-youtube"></i>
+                </div>
+                <span class="logo-text">YouTube</span>
+            </a>
+        </div>
+
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input type="text" class="search-box" id="searchInput"
+                    placeholder="Search videos, channels, playlists...">
+                <button class="search-btn" id="searchBtn" title="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="navbar-right">
+            <button class="nav-icon-btn" title="Create" onclick="openUploadModal()">
+                <i class="fas fa-video"></i>
+            </button>
+            <button class="nav-icon-btn" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge"></span>
+            </button>
+            <button class="nav-icon-btn" title="Settings">
+                <i class="fas fa-cog"></i>
+            </button>
+            <div style="position: relative;">
+                <button class="nav-icon-btn" id="userMenuBtn" onclick="toggleUserMenu()" title="Account">
+                    <img src="https://ui-avatars.com/api/?name=Pinki+Lohana&background=ff0000&color=fff&bold=true"
+                        alt="Pinki Lohana" class="user-avatar">
+                </button>
+
+                <div class="user-menu" id="userMenu">
+                    <div class="user-menu-header">
+                        <div class="user-info">
+                            <img src="https://ui-avatars.com/api/?name=Pinki+Lohana&background=ff0000&color=fff&bold=true"
+                                alt="Pinki Lohana" class="user-avatar">
+                            <div class="user-details">
+                                <h4>Pinki Lohana</h4>
+                                <p>pinki-lohana@gmail.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="user-menu-item" onclick="navigateTo('profile')">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Your Profile</span>
+                    </button>
+                    <button class="user-menu-item" onclick="navigateTo('channel')">
+                        <i class="fas fa-tv"></i>
+                        <span>Create a Channel</span>
+                    </button>
+                    <button class="user-menu-item" onclick="navigateTo('studio')">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>YouTube Studio</span>
+                    </button>
+                    <button class="user-menu-item" onclick="navigateTo('purchases')">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Purchases and memberships</span>
+                    </button>
+                    <div class="user-menu-divider"></div>
+                    <button class="user-menu-item" onclick="navigateTo('settings')">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </button>
+                    <button class="user-menu-item" onclick="navigateTo('help')">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help</span>
+                    </button>
+                    <button class="user-menu-item" onclick="navigateTo('feedback')">
+                        <i class="fas fa-comments"></i>
+                        <span>Send feedback</span>
+                    </button>
+                    <div class="user-menu-divider"></div>
+                    <button class="user-menu-item" onclick="logout()" style="color: var(--accent);">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sign out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar" id="sidebar">
+        <button class="sidebar-item active" onclick="navigateTo('home')">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('shorts')">
+            <i class="fas fa-film"></i>
+            <span>Shorts</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('subscriptions')">
+            <i class="fas fa-play-circle"></i>
+            <span>Subscriptions</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('library')">
+            <i class="fas fa-folder"></i>
+            <span>Library</span>
+        </button>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section-title">YOUR STUFF</div>
+        <button class="sidebar-item" onclick="navigateTo('history')">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('watch-later')">
+            <i class="fas fa-clock"></i>
+            <span>Watch Later</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('liked-videos')">
+            <i class="fas fa-thumbs-up"></i>
+            <span>Liked Videos</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('your-videos')">
+            <i class="fas fa-video"></i>
+            <span>Your Videos</span>
+        </button>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section-title">SUBSCRIPTIONS</div>
+        <button class="sidebar-item" onclick="showToast('Visiting: Web Development Hub', 'info')">
+            <img src="https://ui-avatars.com/api/?name=WD&background=4285F4&color=fff" alt="WD"
+                style="width: 24px; height: 24px; border-radius: 50%; margin-left: 2px;">
+            <span>Web Development Hub</span>
+        </button>
+        <button class="sidebar-item" onclick="showToast('Visiting: Programming Masters', 'info')">
+            <img src="https://ui-avatars.com/api/?name=PM&background=EA4335&color=fff" alt="PM"
+                style="width: 24px; height: 24px; border-radius: 50%; margin-left: 2px;">
+            <span>Programming Masters</span>
+        </button>
+        <button class="sidebar-item" onclick="showToast('Visiting: Tech Talks Daily', 'info')">
+            <img src="https://ui-avatars.com/api/?name=TT&background=34A853&color=fff" alt="TT"
+                style="width: 24px; height: 24px; border-radius: 50%; margin-left: 2px;">
+            <span>Tech Talks Daily</span>
+        </button>
+        <button class="sidebar-item" onclick="showToast('Visiting: Coding Tutorials', 'info')">
+            <img src="https://ui-avatars.com/api/?name=CT&background=FBBC05&color=fff" alt="CT"
+                style="width: 24px; height: 24px; border-radius: 50%; margin-left: 2px;">
+            <span>Coding Tutorials</span>
+        </button>
+        <button class="sidebar-item" onclick="showToast('Visiting: Digital Marketing Pro', 'info')">
+            <img src="https://ui-avatars.com/api/?name=DM&background=9C27B0&color=fff" alt="DM"
+                style="width: 24px; height: 24px; border-radius: 50%; margin-left: 2px;">
+            <span>Digital Marketing Pro</span>
+        </button>
+        <button class="sidebar-item" onclick="showToast('Show more subscriptions', 'info')">
+            <i class="fas fa-chevron-down"></i>
+            <span>Show more</span>
+        </button>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section-title">EXPLORE</div>
+        <button class="sidebar-item" onclick="navigateTo('trending')">
+            <i class="fas fa-fire"></i>
+            <span>Trending</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('shopping')">
+            <i class="fas fa-shopping-bag"></i>
+            <span>Shopping</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('music')">
+            <i class="fas fa-music"></i>
+            <span>Music</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('gaming')">
+            <i class="fas fa-gamepad"></i>
+            <span>Gaming</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('news')">
+            <i class="fas fa-newspaper"></i>
+            <span>News</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('sports')">
+            <i class="fas fa-football-ball"></i>
+            <span>Sports</span>
+        </button>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section-title">MORE FROM YOUTUBE</div>
+        <button class="sidebar-item" onclick="navigateTo('youtube-studio')">
+            <i class="fas fa-play-circle"></i>
+            <span>YouTube Studio</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('youtube-music')">
+            <i class="fas fa-music"></i>
+            <span>YouTube Music</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('youtube-kids')">
+            <i class="fas fa-child"></i>
+            <span>YouTube Kids</span>
+        </button>
+    </aside>
+
+    <!-- ==================== OVERLAY ==================== -->
+    <div class="overlay" id="overlay" onclick="closeModals()"></div>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <div class="main-wrapper" id="mainWrapper">
+        <div class="main-content">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="bubble-container">
+                    <div class="bubble active">All</div>
+                    <div class="bubble">Web Development</div>
+                    <div class="bubble">Python</div>
+                    <div class="bubble">Java Beginners</div>
+                    <div class="bubble">Music</div>
+                    <div class="bubble">Gaming</div>
+                    <div class="bubble">News</div>
+                    <div class="bubble">Sports</div>
+                    <div class="bubble">Education</div>
+                    <div class="bubble">Comedy</div>
+                    <div class="bubble">Vlogs</div>
+                    <div class="bubble">Travel</div>
+                    <div class="bubble">Food</div>
+                    <div class="bubble">Software Engineering</div>
+                    <div class="bubble">Technology</div>
+                    <div class="bubble">Health</div>
+                    <div class="bubble">Podcasts</div>
+                    <div class="bubble">Mixes</div>
+                    <div class="bubble">Student</div>
+                    <div class="bubble">Lifestyle</div>
+                    <div class="bubble">Live</div>
+                    <div class="bubble">Goals</div>
+
+                </div>
+                <!-- Video Grid -->
+                <div class="video-grid" id="videoGrid">
+                    <!-- Videos will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VIDEO PLAYER MODAL ==================== -->
+        <div class="video-player-modal" id="videoPlayerModal">
+            <div class="video-player-header">
+                <h2 class="modal-title" id="videoPlayerTitle">Video Title</h2>
+                <button class="video-player-close" onclick="closeVideoPlayer()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="video-player-container">
+                <iframe class="video-player-iframe" id="videoPlayer"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <div class="video-player-info">
+                <h3 class="video-title" id="videoDetailTitle">Video Title</h3>
+                <div class="channel-info">
+                    <img src="https://i.ytimg.com/vi/4WjtQjPQGIs/maxresdefault.jpg" alt="Creator"
+                        class="channel-avatar">
+                    <div class="channel-details">
+                        <div class="channel-name">
+                            <span class="channel-name-text">Creator Channel</span>
+                            <i class="fas fa-check-circle verified-badge"></i>
+                        </div>
+                        <div class="video-meta">1.2M subscribers • 500K views</div>
+                    </div>
+                    <button class="btn-primary-custom" onclick="showToast('✅ Subscribed to channel!', 'success')">
+                        <i class="fas fa-plus"></i>
+                        Subscribe
+                    </button>
+                </div>
+                <div style="margin-top: 20px;">
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        This is an amazing tutorial on web development. Learn everything you need to know about building
+                        modern web applications with the latest technologies and best practices. Like, comment, and
+                        subscribe for more tutorials!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== UPLOAD MODAL ==================== -->
+        <div class="modal-custom" id="uploadModal">
+            <div class="modal-custom-content" style="width: 500px;">
+                <div class="modal-header">
+                    <h2 class="modal-title"><i class="fas fa-cloud-upload-alt"></i> Upload Video</h2>
+                    <button class="modal-close" onclick="closeUploadModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div style="background: var(--tertiary-bg); border: 2px dashed var(--border-color); border-radius: 12px; padding: 40px 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; margin-bottom: 20px;"
+                        onmouseover="this.style.borderColor='var(--accent)'"
+                        onmouseout="this.style.borderColor='var(--border-color)'">
+                        <div style="font-size: 48px; margin-bottom: 16px; color: var(--accent);">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <p style="font-weight: 600; margin-bottom: 8px;">Drag and drop your video here</p>
+                        <p style="color: var(--text-secondary); font-size: 14px;">or click to select files</p>
+                        <p style="color: var(--text-secondary); font-size: 12px; margin-top: 16px;">MP4, MKV, MOV, AVI
+                            (max
+                            100GB)</p>
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600;"><i
+                                class="fas fa-heading"></i>
+                            Video Title</label>
+                        <input type="text" class="form-control-custom" placeholder="Enter video title"
+                            style="width: 100%; margin-bottom: 16px;">
+
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600;"><i
+                                class="fas fa-align-left"></i> Description</label>
+                        <textarea class="form-control-custom" placeholder="Tell viewers about your video" rows="4"
+                            style="width: 100%; margin-bottom: 16px; resize: none;"></textarea>
+
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn-primary-custom" style="flex: 1;"
+                                onclick="showToast('✅ Video uploaded successfully!', 'success'); closeUploadModal();">
+                                <i class="fas fa-upload"></i>
+                                Publish Video
+                            </button>
+                            <button class="btn-secondary-custom" onclick="closeUploadModal()" style="flex: 1;">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST CONTAINER ==================== -->
+    <div id="toastContainer"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ==================== SAMPLE VIDEOS DATA ====================
+        const videosData = [
+            {
+
+                id: 1,
+                title: "Complete JavaScript Mastery | From Beginner to Advanced in 2026 | learn from starting ",
+                channel: "Apna College",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/4WjtQjPQGIs/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/4WjtQjPQGIs",
+                duration: 3600,
+                views: 12000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 2,
+                title: "Learn Python Full Course for Beginners | build your future",
+                channel: "CodeWithHarry",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/rfscVS0vtbw/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/rfscVS0vtbw",
+                duration: 7200,
+                views: 15000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 3,
+                title: "Java Full Course | Learn Java in One Video | from beginning ",
+                channel: "Programming with Mosh",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/eIrMbAQSU34/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/eIrMbAQSU34",
+                duration: 9000,
+                views: 10000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+
+                id: 4,
+                title: "C++ Full Course for Beginners | (Learn C++ in 3 Hours)",
+                channel: "freeCodeCamp.org",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/vLnPwxZdW4Y/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/vLnPwxZdW4Y",
+                duration: 10800,
+                views: 18000000,
+                createdAt: "5 years ago",
+                verified: true
+            },
+            {
+                id: 5,
+                title: "Noor e khuda | soulful (Song)",
+                channel: "Adnan sami",
+                avatar: "https://ui-avatars.com/api/?name=Akhil&background=000&color=fff",
+                thumbnail: "https://i.ytimg.com/vi/lFQiBOSBxzM/maxresdefault.jpg",
+                videoUrl: "https://youtu.be/lFQiBOSBxzM",
+                duration: 200,
+                views: 50000000,
+                createdAt: "5 years ago",
+                verified: true
+            },
+            {
+                id: 6,
+                title: "How to Build Successful IT Career",
+                channel: "CodeWithHarry",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/rfscVS0vtbw/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/rfscVS0vtbw",
+                duration: 2000,
+                views: 20000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+
+            {
+
+                id: 7,
+                title: "BAHAN K SHADI MAIN KITNA GIFTS MILA | DAILY VLOGS ",
+                channel: "Hira Faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://img.youtube.com/vi/Iv4MVow9Tlc/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/Iv4MVow9Tlc",
+                duration: 1200,
+                views: 1.5000000,
+                createdAt: "3 years ago",
+                verified: true
+
+            },
+            {
+                id: 8,
+                title: "Summer glow makeup | LOOKbetter with me | Vlog",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/Zf6TDNHNVTc/maxresdefault.jpg",
+                videoUrl: "https://youtu.be/Ber7DFd8Fmk?si=Qvvxn7ehk7Tdo9kx",
+                duration: 1100,
+                views: 1000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 9,
+                title: " Sub packing karli | ghar chorkar janna ki| Vlog",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/knk0-1U4ArI/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB9owICjAggnIZ5_Lk-1hxNlle9Jw",
+                videoUrl: "https://youtu.be/knk0-1U4ArI",
+                duration: 900,
+                views: 18000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 10,
+                title: "3 MILLION CELEBRATION VIDEOS | FINALLY COMPLETED | ",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/-szUm5hbUNM/hqdefault.jpg",
+                videoUrl: "https://youtu.be/-szUm5hbUNM?si=HO8x-bNyhgWkLmXr",
+                duration: 1300,
+                views: 22000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+                id: 11,
+                title: "Rubaru - Rang De Basanti",
+                channel: "A.R. Rahman",
+                avatar: "https://ui-avatars.com/api/?name=ARR&background=ff6600&color=fff",
+                thumbnail: "https://img.youtube.com/vi/BrfRB6aTZlM/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/BrfRB6aTZlM",
+                duration: 300,
+                views: 30000000,
+                createdAt: "10 years ago",
+                verified: true
+            },
+            {
+                id: 12,
+                title: "Tajdar-e-Haram Song",
+                channel: "Code studio session",
+                avatar: "https://ui-avatars.com/api/?name=BM&background=222&color=fff",
+                thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhq6jqv_qlw8bV7jprtTVSLcFmQmldQRPaOw&s",
+                videoUrl: "https://youtu.be/a18py61_F_w",
+                duration: 280,
+                views: 365000000,
+                createdAt: "7 years ago",
+                verified: true
+            },
+            {
+                id: 13,
+                title: "Rab Di Raza - Punjabi Song",
+                channel: "Punjabi Hits",
+                avatar: "https://ui-avatars.com/api/?name=PH&background=cc0000&color=fff",
+                thumbnail: "https://img.youtube.com/vi/NZp_axebSfQ/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/NZp_axebSfQ",
+                duration: 240,
+                views: 20000000,
+                createdAt: "6 years ago",
+                verified: false
+            },
+            {
+                id: 14,
+                title: "Java Full Course - Learn Java in One Video",
+                channel: "Programming with Mosh",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/eIrMbAQSU34/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/eIrMbAQSU34",
+                duration: 9000,
+                views: 10000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+
+                id: 15,
+                title: "C++ Full Course for Beginners (Learn C++ in 3 Hours)",
+                channel: "freeCodeCamp.org",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/vLnPwxZdW4Y/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/vLnPwxZdW4Y",
+                duration: 10800,
+                views: 18000000,
+                createdAt: "5 years ago",
+                verified: true
+            },
+            {
+                id: 16,
+                title: "Noor e khuda (Song)",
+                channel: "Adnan sami",
+                avatar: "https://ui-avatars.com/api/?name=Akhil&background=000&color=fff",
+                thumbnail: "https://i.ytimg.com/vi/lFQiBOSBxzM/maxresdefault.jpg",
+                videoUrl: "https://youtu.be/lFQiBOSBxzM",
+                duration: 200,
+                views: 50000000,
+                createdAt: "5 years ago",
+                verified: true
+            },
+            {
+                id: 17,
+                title: "Ruby Programming Language - Full Course",
+                channel: "freeCodeCamp.org",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/t_ispmWmdjY/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/t_ispmWmdjY",
+                duration: 15000,
+                views: 5000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 18,
+                title: "HTML Full Course - Build Websites",
+                channel: "CodeWithHarry",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://i.ytimg.com/vi/BsDoLVMnmZs/hqdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/BSdY9h9p3v8",
+                duration: 7200,
+                views: 10000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 19,
+                title: "CSS Full Course - Complete Guide",
+                channel: "freeCodeCamp.org",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/1Rs2ND1ryYc/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/1Rs2ND1ryYc",
+                duration: 10800,
+                views: 12000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 20,
+                title: "C# Full Course for Beginners",
+                channel: "Programming with Mosh",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/GhQdlIFylQ8/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/GhQdlIFylQ8",
+                duration: 9000,
+                views: 8000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+                id: 21,
+                title: "How to Make a Career in Tech (Complete Roadmap)",
+                channel: "Apna College",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/5MgBikgcWnY/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/5MgBikgcWnY",
+                duration: 900,
+                views: 15000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 22,
+                title: "Become a Software Engineer from Scratch",
+                channel: "Programming with Mosh",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/W6NZfCO5SIk/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/W6NZfCO5SIk",
+                duration: 1200,
+                views: 12000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 23,
+                title: "Start Freelancing & Earn Online (Full Guide)",
+                channel: "WS.cube tech.",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://i.ytimg.com/vi/AYwr5leK6Fs/maxresdefault.jpg",
+                videoUrl: "https://youtu.be/AYwr5leK6Fs",
+                duration: 1800,
+                views: 18000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+                id: 24,
+                title: "Best Career Paths in Computer Science",
+                channel: "Telusko",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/1Rs2ND1ryYc/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/1Rs2ND1ryYc",
+                duration: 1500,
+                views: 9000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 25,
+                title: "How to Become a Data Scientist",
+                channel: "Simplilearn",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/X3paOmcrTjQ/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/X3paOmcrTjQ",
+                duration: 2100,
+                views: 11000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 26,
+                title: "Get High Paying IT Jobs in 2026",
+                channel: "edureka!",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/2ePf9rue1Ao/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/2ePf9rue1Ao",
+                duration: 1800,
+                views: 14000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+                id: 27,
+                title: "Web Developer Roadmap 2026",
+                channel: "Traversy Media",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/UB1O30fR-EE/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/UB1O30fR-EE",
+                duration: 2400,
+                views: 16000000,
+                createdAt: "5 years ago",
+                verified: true
+            },
+            {
+                id: 28,
+                title: "How to Build Successful IT Career",
+                channel: "CodeWithHarry",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/rfscVS0vtbw/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/rfscVS0vtbw",
+                duration: 2000,
+                views: 20000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+
+            {
+
+                id: 29,
+                title: "BAHAN K SHADI MAIN KITNA GIFTS MILA | DAILY VLOGS ",
+                channel: "Hira Faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://img.youtube.com/vi/Iv4MVow9Tlc/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/Iv4MVow9Tlc",
+                duration: 1200,
+                views: 1.5000000,
+                createdAt: "3 years ago",
+                verified: true
+
+            },
+            {
+                id: 30,
+                title: "Summer glow makeup | LOOKbetter with me | Vlog",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/Zf6TDNHNVTc/maxresdefault.jpg",
+                videoUrl: "https://youtu.be/Ber7DFd8Fmk?si=Qvvxn7ehk7Tdo9kx",
+                duration: 1100,
+                views: 1000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 31,
+                title: " Sub packing karli | ghar chorkar janna ki| Vlog",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/knk0-1U4ArI/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB9owICjAggnIZ5_Lk-1hxNlle9Jw",
+                videoUrl: "https://youtu.be/knk0-1U4ArI",
+                duration: 900,
+                views: 18000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 32,
+                title: "3 MILLION CELEBRATION VIDEOS | FINALLY COMPLETED | ",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/-szUm5hbUNM/hqdefault.jpg",
+                videoUrl: "https://youtu.be/-szUm5hbUNM?si=HO8x-bNyhgWkLmXr",
+                duration: 1300,
+                views: 22000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+                id: 35,
+                title: "Ruby Programming Language - Full Course",
+                channel: "freeCodeCamp.org",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/t_ispmWmdjY/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/t_ispmWmdjY",
+                duration: 15000,
+                views: 5000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 39,
+                title: "HTML Full Course - Build Websites",
+                channel: "CodeWithHarry",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://i.ytimg.com/vi/BsDoLVMnmZs/hqdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/BSdY9h9p3v8",
+                duration: 7200,
+                views: 10000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 41,
+                title: "CSS Full Course - Complete Guide",
+                channel: "freeCodeCamp.org",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/1Rs2ND1ryYc/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/1Rs2ND1ryYc",
+                duration: 10800,
+                views: 12000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 42,
+                title: "C# Full Course for Beginners",
+                channel: "Programming with Mosh",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/GhQdlIFylQ8/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/GhQdlIFylQ8",
+                duration: 9000,
+                views: 8000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+                id: 53,
+                title: "How to Make a Career in Tech (Complete Roadmap)",
+                channel: "Apna College",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/5MgBikgcWnY/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/5MgBikgcWnY",
+                duration: 900,
+                views: 15000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 54,
+                title: "Become a Software Engineer from Scratch",
+                channel: "Programming with Mosh",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/W6NZfCO5SIk/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/W6NZfCO5SIk",
+                duration: 1200,
+                views: 12000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 65,
+                title: "Start Freelancing & Earn Online (Full Guide)",
+                channel: "WS.cube tech.",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://i.ytimg.com/vi/AYwr5leK6Fs/maxresdefault.jpg",
+                videoUrl: "https://youtu.be/AYwr5leK6Fs",
+                duration: 1800,
+                views: 18000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+                id: 66,
+                title: "Best Career Paths in Computer Science",
+                channel: "Telusko",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/1Rs2ND1ryYc/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/1Rs2ND1ryYc",
+                duration: 1500,
+                views: 9000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 67,
+                title: "How to Become a Data Scientist",
+                channel: "Simplilearn",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/X3paOmcrTjQ/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/X3paOmcrTjQ",
+                duration: 2100,
+                views: 11000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 68,
+                title: "Get High Paying IT Jobs in 2026",
+                channel: "edureka!",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/2ePf9rue1Ao/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/2ePf9rue1Ao",
+                duration: 1800,
+                views: 14000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+                id: 69,
+                title: "Web Developer Roadmap 2026",
+                channel: "Traversy Media",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/UB1O30fR-EE/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/UB1O30fR-EE",
+                duration: 2400,
+                views: 16000000,
+                createdAt: "5 years ago",
+                verified: true
+            },
+            {
+                id: 70,
+                title: "How to Build Successful IT Career",
+                channel: "CodeWithHarry",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/rfscVS0vtbw/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/rfscVS0vtbw",
+                duration: 2000,
+                views: 20000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+
+            {
+
+                id: 71,
+                title: "BAHAN K SHADI MAIN KITNA GIFTS MILA | DAILY VLOGS ",
+                channel: "Hira Faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://img.youtube.com/vi/Iv4MVow9Tlc/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/Iv4MVow9Tlc",
+                duration: 1200,
+                views: 1.5000000,
+                createdAt: "3 years ago",
+                verified: true
+
+            },
+            {
+                id: 72,
+                title: "Summer glow makeup | LOOKbetter with me | Vlog",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/Zf6TDNHNVTc/maxresdefault.jpg",
+                videoUrl: "https://youtu.be/Ber7DFd8Fmk?si=Qvvxn7ehk7Tdo9kx",
+                duration: 1100,
+                views: 1000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 73,
+                title: " Sub packing karli | ghar chorkar janna ki| Vlog",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/knk0-1U4ArI/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB9owICjAggnIZ5_Lk-1hxNlle9Jw",
+                videoUrl: "https://youtu.be/knk0-1U4ArI",
+                duration: 900,
+                views: 18000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 74,
+                title: "3 MILLION CELEBRATION VIDEOS | FINALLY COMPLETED | ",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/-szUm5hbUNM/hqdefault.jpg",
+                videoUrl: "https://youtu.be/-szUm5hbUNM?si=HO8x-bNyhgWkLmXr",
+                duration: 1300,
+                views: 22000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+
+                id: 77,
+                title: "Complete JavaScript Mastery - From Beginner to Advanced in 2026",
+                channel: "Apna College",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/4WjtQjPQGIs/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/4WjtQjPQGIs",
+                duration: 3600,
+                views: 12000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 78,
+                title: "Learn Python Full Course for Beginners",
+                channel: "CodeWithHarry",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/rfscVS0vtbw/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/rfscVS0vtbw",
+                duration: 7200,
+                views: 15000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 79,
+                title: "Java Full Course - Learn Java in One Video",
+                channel: "Programming with Mosh",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/eIrMbAQSU34/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/eIrMbAQSU34",
+                duration: 9000,
+                views: 10000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+
+                id: 80,
+                title: "C++ Full Course for Beginners (Learn C++ in 3 Hours)",
+                channel: "freeCodeCamp.org",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/vLnPwxZdW4Y/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/vLnPwxZdW4Y",
+                duration: 10800,
+                views: 18000000,
+                createdAt: "5 years ago",
+                verified: true
+            },
+            {
+                id: 81,
+                title: "Noor e khuda (Song)",
+                channel: "Adnan sami",
+                avatar: "https://ui-avatars.com/api/?name=Akhil&background=000&color=fff",
+                thumbnail: "https://i.ytimg.com/vi/lFQiBOSBxzM/maxresdefault.jpg",
+                videoUrl: "https://youtu.be/lFQiBOSBxzM",
+                duration: 200,
+                views: 50000000,
+                createdAt: "5 years ago",
+                verified: true
+            },
+            {
+                id: 82,
+                title: "How to Build Successful IT Career",
+                channel: "CodeWithHarry",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/rfscVS0vtbw/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/rfscVS0vtbw",
+                duration: 2000,
+                views: 20000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+
+            {
+
+                id: 85,
+                title: "BAHAN K SHADI MAIN KITNA GIFTS MILA | DAILY VLOGS ",
+                channel: "Hira Faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://img.youtube.com/vi/Iv4MVow9Tlc/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/Iv4MVow9Tlc",
+                duration: 1200,
+                views: 1.5000000,
+                createdAt: "3 years ago",
+                verified: true
+
+            },
+            {
+                id: 87,
+                title: "Summer glow makeup | LOOKbetter with me | Vlog",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/Zf6TDNHNVTc/maxresdefault.jpg",
+                videoUrl: "https://youtu.be/Ber7DFd8Fmk?si=Qvvxn7ehk7Tdo9kx",
+                duration: 1100,
+                views: 1000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 88,
+                title: " Sub packing karli | ghar chorkar janna ki| Vlog",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/knk0-1U4ArI/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB9owICjAggnIZ5_Lk-1hxNlle9Jw",
+                videoUrl: "https://youtu.be/knk0-1U4ArI",
+                duration: 900,
+                views: 18000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 89,
+                title: "3 MILLION CELEBRATION VIDEOS | FINALLY COMPLETED | ",
+                channel: "Hira faisal",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiq5L4dXj8727ZlwIb32tBMs1aL1MzldQZhA&s",
+                thumbnail: "https://i.ytimg.com/vi/-szUm5hbUNM/hqdefault.jpg",
+                videoUrl: "https://youtu.be/-szUm5hbUNM?si=HO8x-bNyhgWkLmXr",
+                duration: 1300,
+                views: 22000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+                id: 90,
+                title: "Rubaru - Rang De Basanti",
+                channel: "A.R. Rahman",
+                avatar: "https://ui-avatars.com/api/?name=ARR&background=ff6600&color=fff",
+                thumbnail: "https://img.youtube.com/vi/BrfRB6aTZlM/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/BrfRB6aTZlM",
+                duration: 300,
+                views: 30000000,
+                createdAt: "10 years ago",
+                verified: true
+            },
+            {
+                id: 91,
+                title: "Tajdar-e-Haram Song",
+                channel: "Code studio session",
+                avatar: "https://ui-avatars.com/api/?name=BM&background=222&color=fff",
+                thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhq6jqv_qlw8bV7jprtTVSLcFmQmldQRPaOw&s",
+                videoUrl: "https://youtu.be/a18py61_F_w",
+                duration: 280,
+                views: 365000000,
+                createdAt: "7 years ago",
+                verified: true
+            },
+            {
+                id: 92,
+                title: "Rab Di Raza - Punjabi Song",
+                channel: "Punjabi Hits",
+                avatar: "https://ui-avatars.com/api/?name=PH&background=cc0000&color=fff",
+                thumbnail: "https://img.youtube.com/vi/NZp_axebSfQ/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/NZp_axebSfQ",
+                duration: 240,
+                views: 20000000,
+                createdAt: "6 years ago",
+                verified: false
+            },
+            {
+                id: 93,
+                title: "Java Full Course - Learn Java in One Video",
+                channel: "Programming with Mosh",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/eIrMbAQSU34/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/eIrMbAQSU34",
+                duration: 9000,
+                views: 10000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+
+                id: 94,
+                title: "C++ Full Course for Beginners (Learn C++ in 3 Hours)",
+                channel: "freeCodeCamp.org",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/vLnPwxZdW4Y/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/vLnPwxZdW4Y",
+                duration: 10800,
+                views: 18000000,
+                createdAt: "5 years ago",
+                verified: true
+            },
+            {
+                id: 95,
+                title: "Noor e khuda (Song)",
+                channel: "Adnan sami",
+                avatar: "https://ui-avatars.com/api/?name=Akhil&background=000&color=fff",
+                thumbnail: "https://i.ytimg.com/vi/lFQiBOSBxzM/maxresdefault.jpg",
+                videoUrl: "https://youtu.be/lFQiBOSBxzM",
+                duration: 200,
+                views: 50000000,
+                createdAt: "5 years ago",
+                verified: true
+            },
+            {
+                id: 96,
+                title: "Ruby Programming Language - Full Course",
+                channel: "freeCodeCamp.org",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/t_ispmWmdjY/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/t_ispmWmdjY",
+                duration: 15000,
+                views: 5000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 97,
+                title: "HTML Full Course - Build Websites",
+                channel: "CodeWithHarry",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://i.ytimg.com/vi/BsDoLVMnmZs/hqdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/BSdY9h9p3v8",
+                duration: 7200,
+                views: 10000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+            {
+                id: 98,
+                title: "CSS Full Course - Complete Guide",
+                channel: "freeCodeCamp.org",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/1Rs2ND1ryYc/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/1Rs2ND1ryYc",
+                duration: 10800,
+                views: 12000000,
+                createdAt: "3 years ago",
+                verified: true
+            },
+            {
+                id: 99,
+                title: "C# Full Course for Beginners",
+                channel: "Programming with Mosh",
+                avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdwlAzgOV2mzXCVR9gXPtDMUX-u6N0Iwt9w&s",
+                thumbnail: "https://img.youtube.com/vi/GhQdlIFylQ8/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/GhQdlIFylQ8",
+                duration: 9000,
+                views: 8000000,
+                createdAt: "4 years ago",
+                verified: true
+            },
+            {
+                id: 100,
+                title: "How to Make a Career in Tech (Complete Roadmap)",
+                channel: "Apna College",
+                avatar: "https://blog.tcea.org/wp-content/uploads/2025/04/AI-Tools-to-Support-English-Language-Learners-Featured-Image.png",
+                thumbnail: "https://img.youtube.com/vi/5MgBikgcWnY/maxresdefault.jpg",
+                videoUrl: "https://www.youtube.com/embed/5MgBikgcWnY",
+                duration: 900,
+                views: 15000000,
+                createdAt: "2 years ago",
+                verified: true
+            },
+
+        ];
+
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function formatViews(views) {
+            if (views >= 1000000) return (views / 1000000).toFixed(1) + 'M';
+            if (views >= 1000) return (views / 1000).toFixed(1) + 'K';
+            return views.toString();
+        }
+
+        function formatDuration(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+
+            if (hours > 0) {
+                return `${hours}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }
+            return `${minutes}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+
+            let icon = 'fas fa-info-circle';
+            if (type === 'success') icon = 'fas fa-check-circle';
+            if (type === 'error') icon = 'fas fa-exclamation-circle';
+            if (type === 'warning') icon = 'fas fa-exclamation-triangle';
+
+            toast.innerHTML = `
+                <i class="${icon} toast-icon"></i>
+                <span>${message}</span>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'toastSlideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function renderVideos(videos = videosData) {
+            const videoGrid = document.getElementById('videoGrid');
+
+            videoGrid.innerHTML = videos.map(video => `
+                <div class="video-card">
+                    <div class="video-thumbnail-wrapper" onclick="playVideo(${video.id}, '${video.title}')">
+                        <img src="${video.thumbnail}" alt="${video.title}" class="video-thumbnail">
+                        <div class="video-overlay">
+                            <div class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <span class="video-duration">${formatDuration(video.duration)}</span>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <div class="channel-info">
+                            <img src="${video.avatar}" alt="${video.channel}" class="channel-avatar">
+                            <div class="channel-details">
+                                <div class="channel-name">
+                                    <span class="channel-name-text">${video.channel}</span>
+                                    ${video.verified ? '<i class="fas fa-check-circle verified-badge"></i>' : ''}
+                                </div>
+                                <div class="video-meta">${formatViews(video.views)} views • ${video.createdAt}</div>
+                            </div>
+                        </div>
+                        <div class="video-actions">
+                            <button class="action-btn" title="Add to Watch Later" onclick="event.stopPropagation(); addToWatchLater(${video.id})">
+                                <i class="far fa-clock"></i>
+                            </button>
+                            <button class="action-btn" title="Like" onclick="event.stopPropagation(); likeVideo(this, ${video.id})">
+                                <i class="far fa-thumbs-up"></i>
+                            </button>
+                            <button class="action-btn" title="Download" onclick="event.stopPropagation(); downloadVideo(${video.id})">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="action-btn" title="Share" onclick="event.stopPropagation(); shareVideo(${video.id})">
+                                <i class="fas fa-share"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== SIDEBAR FUNCTIONS ====================
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            sidebar.classList.toggle('hide');
+
+            if (window.innerWidth <= 1024) {
+                overlay.classList.toggle('show');
+            }
+        }
+
+        // ==================== MENU FUNCTIONS ====================
+        function toggleUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            userMenu.classList.toggle('show');
+        }
+
+        function closeUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            userMenu.classList.remove('show');
+        }
+
+        function navigateTo(page) {
+            const sidebar = document.getElementById('sidebar');
+
+            // Update active item in sidebar
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            if (event && event.target && event.target.closest) {
+                const item = event.target.closest('.sidebar-item');
+                if (item) item.classList.add('active');
+            }
+
+            // Close sidebar on mobile
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.add('hide');
+                document.getElementById('overlay').classList.remove('show');
+            }
+
+            closeUserMenu();
+            showToast(`📌 Navigated to ${page}`, 'info');
+        }
+        const bubbles = document.querySelectorAll(".bubble");
+
+        bubbles.forEach(bubble => {
+            bubble.addEventListener("click", () => {
+                document.querySelector(".active").classList.remove("active");
+                bubble.classList.add("active");
+            });
+        });
+
+
+
+        // ==================== VIDEO FUNCTIONS ====================
+        function playVideo(videoId, videoTitle) {
+            const modal = document.getElementById('videoPlayerModal');
+            const player = document.getElementById('videoPlayer');
+
+            player.src = `https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1`;
+
+
+            document.getElementById('videoPlayerTitle').textContent = videoTitle;
+            document.getElementById('videoDetailTitle').textContent = videoTitle;
+
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoPlayer() {
+            const modal = document.getElementById('videoPlayerModal');
+            const player = document.getElementById('videoPlayer');
+
+            player.src = '';
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function likeVideo(btn, videoId) {
+            btn.classList.toggle('active');
+            const icon = btn.querySelector('i');
+
+            if (btn.classList.contains('active')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                showToast('👍 Added to liked videos', 'success');
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                showToast('👎 Removed from liked videos', 'info');
+            }
+        }
+
+        function addToWatchLater(videoId) {
+            showToast('⏰ Added to Watch Later', 'success');
+        }
+
+        function downloadVideo(videoId) {
+            showToast('⬇️ Download started', 'success');
+        }
+
+        function shareVideo(videoId) {
+            const url = `https://youtube.com/watch?v=dQw4w9WgXcQ`;
+            navigator.clipboard.writeText(url);
+            showToast('🔗 Link copied to clipboard', 'success');
+        }
+
+        // ==================== MODAL FUNCTIONS ====================
+        function openUploadModal() {
+            const modal = document.getElementById('uploadModal');
+            const overlay = document.getElementById('overlay');
+
+            modal.classList.add('show');
+            overlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeUploadModal() {
+            const modal = document.getElementById('uploadModal');
+            const overlay = document.getElementById('overlay');
+
+            modal.classList.remove('show');
+            overlay.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function closeModals() {
+            closeUploadModal();
+            closeVideoPlayer();
+        }
+
+        // ==================== SEARCH FUNCTIONS ====================
+        function performSearch() {
+            const input = document.getElementById('searchInput');
+            if (!input) return;
+
+            const query = input.value.toLowerCase().trim();
+
+            if (query === '') {
+                renderVideos(videosData);
+                return;
+            }
+
+            const filtered = videosData.filter(video =>
+                (video.title || '').toLowerCase().includes(query) ||
+                (video.channel || '').toLowerCase().includes(query)
+            );
+
+            renderVideos(filtered);
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        document.addEventListener('DOMContentLoaded', function () {
+            // Menu toggle
+            document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
+
+            // Search functionality
+            document.getElementById('searchBtn').addEventListener('click', performSearch);
+            document.getElementById('searchInput').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // Close user menu when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.user-menu') && !e.target.closest('#userMenuBtn')) {
+                    closeUserMenu();
+                }
+            });
+
+            // Close modals on Escape key
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeModals();
+                }
+            });
+
+            // Render initial videos
+            renderVideos();
+
+            // Handle responsive sidebar
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 1024) {
+                    document.getElementById('sidebar').classList.remove('hide');
+                    document.getElementById('overlay').classList.remove('show');
+                }
+            });
+        });
+
+        // Close sidebar when clicking overlay
+        document.getElementById('overlay').addEventListener('click', function (e) {
+            if (e.target === this && window.innerWidth <= 1024) {
+                document.getElementById('sidebar').classList.add('hide');
+                this.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+
+</html>
